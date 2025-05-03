@@ -9,5 +9,10 @@ export class UserService {
      @InjectRepository(User)
      private userRepo:Repository<User>
     ){}
+  
+    async saveUser(){
+        
+    }
+
 
 }
