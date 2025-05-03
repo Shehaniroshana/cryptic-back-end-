@@ -24,7 +24,15 @@ export class UserService {
         throw new BadRequestException(error);
        }
     }
-    
+
+    async authenticateUser(email:string,password:string):Promise<any>{
+        const user =await this.userRepo.findOne({where:{email}});
+        if(!user) throw new BadRequestException('User not found');
+        const isMatch= await bcrypt.compare(password,user.password);
+        if(!isMatch) throw new BadRequestException('Invalid Password');
+        user.password="";
+        return {user,message:'Login Success'};
+    }
 
 
 }
