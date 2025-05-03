@@ -85,7 +85,7 @@ export class UserService {
         const userEntity=await this.userRepo.findOne({where:{id:user.id}});
         if(!userEntity) throw new BadRequestException('User not found');
         if(user.password) user.password = await bcrypt.hash(user.password, 10);
-        const updatedUser=Object.assign(userEntity,user);
+        const updatedUser = Object.assign(userEntity, user) as User;
         return await this.userRepo.save(updatedUser);
         }catch(error){
             console.log(error);

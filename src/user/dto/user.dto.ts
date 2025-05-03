@@ -1,5 +1,10 @@
 import { IsEmail, IsNotEmpty, IsOptional, MinLength } from "class-validator";
 
+enum Role{
+    customer="CUSTOMER",
+    admin="ADMIN",
+    seller="SELLER"
+}
 export class UserDto{
     
     @IsOptional()
@@ -17,6 +22,9 @@ export class UserDto{
     @MinLength(6,{message:'password must be at least 6 characters'})
     password:string;
 
+    @IsOptional()
+    role?:Role;
+    
     @IsOptional()
     isActive?:boolean;
 }
