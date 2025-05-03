@@ -17,4 +17,6 @@ export class UserDto{
     @MinLength(6,{message:'password must be at least 6 characters'})
     password:string;
 
+    @IsOptional()
+    isActive?:boolean;
 }
