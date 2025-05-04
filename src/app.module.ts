@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [UserModule,
@@ -15,7 +16,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       database:'cryptic_emporium',
       entities:[__dirname+'/**/*.entity{.ts,.js}'],
       synchronize:true,
-    })
+    }),
+    ProductModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,5 +1,6 @@
 import { isEnum } from "class-validator";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Product } from "src/product/entity/product.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 enum Role{
     customer="CUSTOMER",
@@ -24,4 +25,7 @@ export class User{
     role:Role;
     @Column({default:true})
     isActive:boolean;
+
+    @OneToMany(()=>Product,(product)=>product.seller)
+    products:Product[];
 }
