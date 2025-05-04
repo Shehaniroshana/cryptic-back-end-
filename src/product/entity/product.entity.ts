@@ -1,5 +1,6 @@
+import { Rating } from "src/ratings/entity/ratings.entity";
 import { User } from "src/user/entity/user.entity";
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
 
 
 enum RiskLevel{
@@ -36,6 +37,8 @@ export class Product {
     riskLevel:RiskLevel;
     @Column()
     superNaturalEffect:string;
+    @OneToMany(()=>Rating,(rating)=>rating.product)
+    ratings:Rating[];
     @Column({
         default:true
     })

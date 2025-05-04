@@ -5,7 +5,6 @@ import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductModule } from './product/product.module';
 import { RatingsModule } from './ratings/ratings.module';
-import { RatingsModule } from './ratings/ratings.module';
 
 @Module({
   imports: [UserModule,
