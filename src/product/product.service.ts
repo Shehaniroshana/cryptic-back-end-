@@ -35,4 +35,44 @@ export class ProductService {
         }
     }
 
+    async getProductById(id:number):Promise<ProductDTO>{
+        try{
+            if(!id) throw new BadRequestException('Product id is required');
+            const product= await this.productRepo.findOne({where:{id},relations:{seller:true}});
+            if(!product) throw new BadRequestException('Product not found');
+            return plainToInstance(ProductDTO, product);
+        }catch(error){
+            console.log(error);
+            throw error;
+        }
+    }
+
+    async updateProduct(product:ProductDTO):Promise<Product>{
+        try{
+            if(!product.id) throw new BadRequestException('Product id is required');
+            if(!await this.productRepo.findOne({where:{id:product.id}})) throw new BadRequestException('Product not found');
+            if(await this.productRepo.findOne({where:{seller: { id: product.seller }, name: product.name }})) throw new BadRequestException('Product name already exists');
+            const productToUpdate= await this.productRepo.findOne({where:{id:product.id}});
+            if(!productToUpdate) throw new BadRequestException('Product not found');
+            const updatedProduct=plainToInstance(Product, product);
+            return await this.productRepo.save(updatedProduct);
+        }catch(error){
+            console.log(error);
+            throw error;
+        }
+    }
+
+    async deleteProduct(id:number):Promise<Product>{
+        try{
+            if(!id) throw new BadRequestException('Product id is required');
+            const productToDelete= await this.productRepo.findOne({where:{id}});
+            if(!productToDelete) throw new BadRequestException('Product not found');
+            productToDelete.isActive=false;
+            return await this.productRepo.save(productToDelete);
+        }catch(error){
+            console.log(error);
+            throw error;
+        }
+    }
+
 }
