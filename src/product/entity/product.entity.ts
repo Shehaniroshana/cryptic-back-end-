@@ -19,9 +19,13 @@ export class Product {
     name:string;
     @Column()
     description:string;
-    @Column()
+    @Column({
+        type:'float'
+    })
     price:number;
-    @Column()
+    @Column({
+        type:'float'
+    })
     shippingCost:number;
     @Column()
     stock:number;

@@ -13,4 +13,5 @@ export class RatingDto{
     user:number;
     @IsNotEmpty({message:'product id is required'})
     product:number;
+    isActive?:boolean
 }

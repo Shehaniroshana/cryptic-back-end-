@@ -14,4 +14,6 @@ export class Rating{
     user:User;
     @ManyToOne(()=>Product,(product)=>product.ratings)
     product:Product
+    @Column({default:true})
+    isActive:boolean
 }

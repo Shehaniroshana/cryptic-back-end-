@@ -27,7 +27,7 @@ export class ProductService {
 
     async getAllProducts():Promise<ProductDTO[]>{
         try{
-            const products= await this.productRepo.find({where:{isActive:true},relations:{seller:true}});
+            const products= await this.productRepo.find({where:{isActive:true},relations:{seller:true,ratings:true}});
             return plainToInstance(ProductDTO, products);
         }catch(error){
             console.log(error);
@@ -38,7 +38,7 @@ export class ProductService {
     async getProductById(id:number):Promise<ProductDTO>{
         try{
             if(!id) throw new BadRequestException('Product id is required');
-            const product= await this.productRepo.findOne({where:{id},relations:{seller:true}});
+            const product= await this.productRepo.findOne({where:{id},relations:{seller:true,ratings:true}});
             if(!product) throw new BadRequestException('Product not found');
             return plainToInstance(ProductDTO, product);
         }catch(error){
@@ -62,17 +62,18 @@ export class ProductService {
         }
     }
 
-    async deleteProduct(id:number):Promise<Product>{
-        try{
-            if(!id) throw new BadRequestException('Product id is required');
-            const productToDelete= await this.productRepo.findOne({where:{id}});
-            if(!productToDelete) throw new BadRequestException('Product not found');
-            productToDelete.isActive=false;
-            return await this.productRepo.save(productToDelete);
-        }catch(error){
+    async deleteProduct(id: number): Promise<Product> {
+        try {
+            if (!id) throw new BadRequestException('Product id is required');
+            const productToDelete = await this.productRepo.findOne({ where: { id } });
+            if (!productToDelete) throw new BadRequestException('Product not found');
+            await this.productRepo.delete(id);
+            return productToDelete; 
+        } catch (error) {
             console.log(error);
             throw error;
         }
     }
+    
 
 }
