@@ -36,7 +36,9 @@ export class Product {
     riskLevel:RiskLevel;
     @Column()
     superNaturalEffect:string;
-    @Column()
+    @Column({
+        default:true
+    })
     isActive:boolean;
 
 }

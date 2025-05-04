@@ -41,7 +41,7 @@ import {
   
     @IsNotEmpty({ message: "Seller ID is required" })
     @IsInt({ message: "Seller ID must be an integer" })
-    sellerId: number;
+    seller: number;
   
     @IsNotEmpty({ message: "Country of origin is required" })
     @IsString()
