@@ -19,4 +19,8 @@ export class Offers{
     endDate:Date;
     @ManyToOne(()=> Product, (product)=> product.offers)
     product:Product;
+    @Column({
+        default:true
+    })
+    isActive:boolean
 }
