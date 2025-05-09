@@ -1,3 +1,4 @@
+import { Offers } from "src/offers/entity/offers.entity";
 import { Rating } from "src/ratings/entity/ratings.entity";
 import { User } from "src/user/entity/user.entity";
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
@@ -43,6 +44,8 @@ export class Product {
     superNaturalEffect:string;
     @OneToMany(()=>Rating,(rating)=>rating.product)
     ratings:Rating[];
+    @OneToMany(()=>Offers,(offers)=> offers.product)
+    offers:Offers[];
     @Column({
         default:true
     })

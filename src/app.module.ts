@@ -5,6 +5,7 @@ import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductModule } from './product/product.module';
 import { RatingsModule } from './ratings/ratings.module';
+import { OffersModule } from './offers/offers.module';
 
 @Module({
   imports: [UserModule,
@@ -19,7 +20,8 @@ import { RatingsModule } from './ratings/ratings.module';
       synchronize:true,
     }),
     ProductModule,
-    RatingsModule
+    RatingsModule,
+    OffersModule
   ],
   controllers: [AppController],
   providers: [AppService],
