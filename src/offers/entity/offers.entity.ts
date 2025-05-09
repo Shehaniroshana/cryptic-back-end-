@@ -2,25 +2,33 @@ import { Product } from "src/product/entity/product.entity";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Offers{
+export class Offers {
     @PrimaryGeneratedColumn()
-    id:number;
+    id: number;
     @Column()
-    title:string;
+    title: string;
     @Column(
         {
-            type:'float'
+            type: 'float'
         }
     )
-    discount:number;
-    @Column()
-    startDate:Date;
-    @Column()
-    endDate:Date;
-    @ManyToOne(()=> Product, (product)=> product.offers)
-    product:Product;
+    discount: number;
+    @Column(
+        {
+            type: 'timestamp'
+        }
+    )
+    startDate: Date;
+    @Column(
+        {
+            type: 'timestamp'
+        }
+    )
+    endDate: Date;
+    @ManyToOne(() => Product, (product) => product.offers)
+    product: Product;
     @Column({
-        default:true
+        default: true
     })
-    isActive:boolean
+    isActive: boolean
 }

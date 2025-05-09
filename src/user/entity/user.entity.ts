@@ -1,4 +1,5 @@
 import { isEnum } from "class-validator";
+import { Order } from "src/order/entity/order.entity";
 import { Product } from "src/product/entity/product.entity";
 import { Rating } from "src/ratings/entity/ratings.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
@@ -32,4 +33,6 @@ export class User{
 
     @OneToMany(()=>Rating,(rating)=>rating.user)
     ratings:Rating[];
+    @OneToMany(()=>Order,(order)=>order.user)
+    orders:Order[]
 }

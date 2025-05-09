@@ -1,4 +1,5 @@
 import { Offers } from "src/offers/entity/offers.entity";
+import { orderItems } from "src/order/entity/order.item.detail.entity";
 import { Rating } from "src/ratings/entity/ratings.entity";
 import { User } from "src/user/entity/user.entity";
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
@@ -46,6 +47,8 @@ export class Product {
     ratings:Rating[];
     @OneToMany(()=>Offers,(offers)=> offers.product)
     offers:Offers[];
+    @OneToMany(()=>orderItems,(orderItem)=>orderItem.product)
+    orderItems:orderItems[]
     @Column({
         default:true
     })
