@@ -1,7 +1,7 @@
 import { IsArray, IsNotEmpty, IsOptional } from "class-validator";
 
 interface OrderItem {
-    productId: number;
+    product: number;
     quantity: number;
     price: number;
 }
@@ -11,7 +11,7 @@ export class OrderDto{
   @IsOptional()
   id?: number;
   @IsNotEmpty({message:'user id is required'})
-  userId: number;
+  user: number;
   @IsArray()
   @IsNotEmpty({message:'order items is required'})
   orderItems: OrderItem[];

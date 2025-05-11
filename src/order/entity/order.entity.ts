@@ -6,13 +6,13 @@ import { orderItems } from "./order.item.detail.entity";
 export class Order{
     @PrimaryGeneratedColumn()
     id: number;
-  
+    
     @ManyToOne(() => User, (user) => user.orders)
     user: User;
-  
+    
     @OneToMany(() => orderItems, (orderItem) => orderItem.order, { cascade: true })
     orderItems: orderItems[];
-  
+    
     @Column({ default: true })
     isActive: boolean;
   
