@@ -44,8 +44,8 @@ export class UserController {
     }
 
     @Put(':id')
-    async update(@Param('id') id: string, @Body() userDto: UserDto) {
-        const user = await this.userService.updateUser({ ...userDto, id: +id });
+    async update(@Body() userDto: UserDto) {
+        const user = await this.userService.updateUser(userDto);
         return { message: 'User updated successfully', data: user };
     }
 
@@ -56,26 +56,38 @@ export class UserController {
     }
 
     @Patch(':id/name')
-    async updateName(@Param('id') id: string, @Body() userDto: UserDto) {
-        const user = await this.userService.updateUserName({ ...userDto, id: +id });
+    async updateName(@Body() userDto: UserDto) {
+        const user = await this.userService.updateUserName(userDto);
         return { message: 'User name updated successfully', data: user };
     }
 
     @Patch(':id/email')
-    async updateEmail(@Param('id') id: string, @Body() userDto: UserDto) {
-        const user = await this.userService.updateUserEmail({ ...userDto, id: +id });
+    async updateEmail(@Body() userDto: UserDto) {
+        const user = await this.userService.updateUserEmail(userDto);
         return { message: 'User email updated successfully', data: user };
     }
 
     @Patch(':id/password')
-    async updatePassword(@Param('id') id: string, @Body() userDto: UserDto) {
-        const user = await this.userService.updateUserPassword({ ...userDto, id: +id });
+    async updatePassword(@Body() userDto: UserDto) {
+        const user = await this.userService.updateUserPassword(userDto);
         return { message: 'User password updated successfully', data: user };
     }
 
     @Patch(':id/role')
-    async updateRole(@Param('id') id: string, @Body() userDto: UserDto) {
-        const user = await this.userService.updateUserRole({ ...userDto, id: +id });
+    async updateRole(@Body() userDto: UserDto) {
+        const user = await this.userService.updateUserRole(userDto);
         return { message: 'User role updated successfully', data: user };
+    }
+     
+    @Get('search/name/:name')
+    async searchByName(@Param('name') name: string) {
+        const users = await this.userService.searchByUserName(name);
+        return { message: 'Users fetched successfully', data: users };
+    }
+
+    @Get('search/email/:email')
+    async searchByEmail(@Param('email') email: string) {
+        const users = await this.userService.searchByUserEmail(email);
+        return { message: 'Users fetched successfully', data: users };
     }
 }
