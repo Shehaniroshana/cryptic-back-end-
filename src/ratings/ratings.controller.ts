@@ -34,4 +34,27 @@ export class RatingsController {
         return {message:'Rating deleted successfully',rate};
     }
 
+    @Post('product/:id')
+    async getRatingsByProductId(@Param('id')id:number):Promise<any>{
+        const rates=await this.ratingService.getRatingsByProductId(id);
+        return {message:'Ratings fetched successfully',rates};
+    }
+
+    @Post('user/:id')
+    async getRatingsByUserId(@Param('id')id:number):Promise<any>{
+        const rates=await this.ratingService.getRatingsByUserId(id);
+        return {message:'Ratings fetched successfully',rates};
+    }
+
+    @Post('user/:userId/product/:productId')
+    async getRatingsByUserIdAndProductId(@Param('userId')userId:number,@Param('productId')productId:number):Promise<any>{
+        const rates=await this.ratingService.getRatingsByUserIdAndProductId(userId,productId);
+        return {message:'Ratings fetched successfully',rates};
+    }
+
+    @Post('product/:id/average')
+    async getAverageRatingByProductId(@Param('id')id:number):Promise<any>{
+        const rate=await this.ratingService.getAverageRatingByProductId(id);
+        return {message:'Average rating fetched successfully',rate};
+    }
 }
