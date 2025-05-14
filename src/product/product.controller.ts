@@ -34,5 +34,10 @@ export class ProductController {
         return {message:"Product Deleted",product:deletedProduct};
     }
 
-
+    @Get('search/:name')
+    async searchByName(@Param('name') name:string):Promise<any>{
+        const products=await this.productService.searchByName(name);
+        return {message:"Products Fetched",products};
+    }
+    
 }

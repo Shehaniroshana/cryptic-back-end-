@@ -1,62 +1,63 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entity/product.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { ProductDTO } from './dto/product.dot';
 import { plainToInstance } from 'class-transformer';
 import { User } from 'src/user/entity/user.entity';
+import { promises } from 'dns';
 
 @Injectable()
 export class ProductService {
-    constructor(@InjectRepository(Product) private productRepo:Repository<Product>,@InjectRepository(User) private userRepo:Repository<User>){}
+    constructor(@InjectRepository(Product) private productRepo: Repository<Product>, @InjectRepository(User) private userRepo: Repository<User>) { }
 
-    async createProduct(product:ProductDTO):Promise<Product>{
-        try{
-        const user= await this.userRepo.findOne({where:{id:product.seller}});
-        if(!user) throw new BadRequestException('User not found');
-        if(!user.isActive) throw new BadRequestException('User is not active');
-        if(user.role !== 'SELLER') throw new BadRequestException('User is not a seller');
-        if(await this.productRepo.findOne({where:{seller: { id: product.seller }, name: product.name }})) throw new BadRequestException('Product name already exists');
-        const newProduct=plainToInstance(Product, product);
-        return await this.productRepo.save(newProduct);
-        }catch(error){
+    async createProduct(product: ProductDTO): Promise<Product> {
+        try {
+            const user = await this.userRepo.findOne({ where: { id: product.seller } });
+            if (!user) throw new BadRequestException('User not found');
+            if (!user.isActive) throw new BadRequestException('User is not active');
+            if (user.role !== 'SELLER') throw new BadRequestException('User is not a seller');
+            if (await this.productRepo.findOne({ where: { seller: { id: product.seller }, name: product.name } })) throw new BadRequestException('Product name already exists');
+            const newProduct = plainToInstance(Product, product);
+            return await this.productRepo.save(newProduct);
+        } catch (error) {
             console.log(error);
             throw error;
         }
     }
 
-    async getAllProducts():Promise<ProductDTO[]>{
-        try{
-            const products= await this.productRepo.find({where:{isActive:true},relations:{seller:true,ratings:true}});
+    async getAllProducts(): Promise<ProductDTO[]> {
+        try {
+            const products = await this.productRepo.find({ where: { isActive: true }, relations: { seller: true, ratings: true } });
             return plainToInstance(ProductDTO, products);
-        }catch(error){
+        } catch (error) {
             console.log(error);
             throw error;
         }
     }
 
-    async getProductById(id:number):Promise<ProductDTO>{
-        try{
-            if(!id) throw new BadRequestException('Product id is required');
-            const product= await this.productRepo.findOne({where:{id},relations:{seller:true,ratings:true}});
-            if(!product) throw new BadRequestException('Product not found');
+    async getProductById(id: number): Promise<ProductDTO> {
+        try {
+            if (!id) throw new BadRequestException('Product id is required');
+            const product = await this.productRepo.findOne({ where: { id }, relations: { seller: true, ratings: true } });
+            if (!product) throw new BadRequestException('Product not found');
             return plainToInstance(ProductDTO, product);
-        }catch(error){
+        } catch (error) {
             console.log(error);
             throw error;
         }
     }
 
-    async updateProduct(product:ProductDTO):Promise<Product>{
-        try{
-            if(!product.id) throw new BadRequestException('Product id is required');
-            if(!await this.productRepo.findOne({where:{id:product.id}})) throw new BadRequestException('Product not found');
-            if(await this.productRepo.findOne({where:{seller: { id: product.seller }, name: product.name }})) throw new BadRequestException('Product name already exists');
-            const productToUpdate= await this.productRepo.findOne({where:{id:product.id}});
-            if(!productToUpdate) throw new BadRequestException('Product not found');
-            const updatedProduct=plainToInstance(Product, product);
+    async updateProduct(product: ProductDTO): Promise<Product> {
+        try {
+            if (!product.id) throw new BadRequestException('Product id is required');
+            if (!await this.productRepo.findOne({ where: { id: product.id } })) throw new BadRequestException('Product not found');
+            if (await this.productRepo.findOne({ where: { seller: { id: product.seller }, name: product.name } })) throw new BadRequestException('Product name already exists');
+            const productToUpdate = await this.productRepo.findOne({ where: { id: product.id } });
+            if (!productToUpdate) throw new BadRequestException('Product not found');
+            const updatedProduct = plainToInstance(Product, product);
             return await this.productRepo.save(updatedProduct);
-        }catch(error){
+        } catch (error) {
             console.log(error);
             throw error;
         }
@@ -68,12 +69,42 @@ export class ProductService {
             const productToDelete = await this.productRepo.findOne({ where: { id } });
             if (!productToDelete) throw new BadRequestException('Product not found');
             await this.productRepo.delete(id);
-            return productToDelete; 
+            return productToDelete;
         } catch (error) {
             console.log(error);
             throw error;
         }
     }
-    
+
+
+    async searchByName(name: string): Promise<Product[]> {
+        try {
+            const products = await this.productRepo.find({
+                where: { name: Like(`%${name}%`), isActive: true },
+                relations: { seller: true, ratings: true }
+            });
+
+            if (products.length === 0) throw new BadRequestException('Products not found');
+
+            const updatedProducts = products.map((product) => {
+                const ratings = product.ratings || [];
+                const averageRating = ratings.length > 0
+                    ? ratings.reduce((sum, r) => sum + r.rate, 0) / ratings.length
+                    : 0;
+                return {
+                    ...product,
+                    averageRating: +averageRating.toFixed(1),
+                };
+            });
+
+            return updatedProducts;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
+
+
 
 }
