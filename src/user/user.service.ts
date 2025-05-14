@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable,Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
 import { Like, Repository } from 'typeorm';
@@ -14,7 +14,9 @@ export class UserService {
     ) {}
 
     async saveUser(user: UserDto): Promise<User> {
-        if (await this.userRepo.findOne({ where: { email: user.email } })) {
+       try{
+            if (await this.userRepo.findOne({ where: { email: user.email } })) {
+            Logger.log('<-- Email already exists');
             throw new BadRequestException('Email already exists');
         }
         user.password = await bcrypt.hash(user.password, 10);
@@ -22,10 +24,15 @@ export class UserService {
         const savedUser = await this.userRepo.save(userEntity);
         savedUser.password = '';
         return savedUser;
+       }catch (error) {
+        Logger.log("<-- Error saving user",error)
+        throw error
+       }
     }
 
     async authenticateUser(email: string, password: string): Promise<any> {
-        if (!email || !password) throw new BadRequestException('Email and Password are required');
+      try{
+       if (!email || !password) throw new BadRequestException('Email and Password are required');
         if (!email.includes('@')) throw new BadRequestException('Invalid Email Format');
         const user = await this.userRepo.findOne({ where: { email } });
         if (!user) throw new BadRequestException('User not found');
@@ -34,29 +41,55 @@ export class UserService {
         if (!isMatch) throw new BadRequestException('Invalid Password');
         user.password = '';
         return { user, message: 'Login Success' };
+      }catch (error) {
+        Logger.log('<-- Error authenticating user',error)
+        throw error
+      }
     }
 
     getAllUsers(): Promise<User[]> {
+        try{
         return this.userRepo.find();
+        }catch (error) {
+            Logger.log('<-- Error getting all users',error)
+            throw error
+        }
     }
 
     getAllActiveUsers(): Promise<User[]> {
-        return this.userRepo.find({ where: { isActive: true } });
+      try{
+            return this.userRepo.find({ where: { isActive: true } });
+      }catch (error) {
+        Logger.log('<-- Error getting all active users',error)
+        throw error
+      }
     }
 
     getAllInactiveUsers(): Promise<User[]> {
+      try{
         return this.userRepo.find({ where: { isActive: false } });
+      }catch (error) {
+        Logger.log('<-- Error getting all inactive users',error)
+        throw error
+      }
     }
 
     async getUserById(id: number): Promise<User> {
+      try{
+        if (!id) throw new BadRequestException('User ID is required');
         const user = await this.userRepo.findOne({ where: { id } });
         if (!user) throw new BadRequestException('User not found');
         user.password = '';
         return user;
+      }catch (error) {
+        Logger.log('<-- Error getting user by id',error)
+        throw error
+      }
     }
 
     async updateUser(user: UserDto): Promise<User> {
-        if (!user.id) throw new BadRequestException('User ID is required');
+       try{
+            if (!user.id) throw new BadRequestException('User ID is required');
         const userEntity = await this.userRepo.findOne({ where: { id: user.id } });
         if (!userEntity) throw new BadRequestException('User not found');
         if (user.password) user.password = await bcrypt.hash(user.password, 10);
@@ -64,20 +97,30 @@ export class UserService {
         const savedUser = await this.userRepo.save(updatedUser);
         savedUser.password = '';
         return savedUser;
+       }catch (error) {
+        Logger.log('<-- Error updating user',error)
+        throw error
+       }
     }
 
     async deleteUser(id: number): Promise<User> {
-        const user = await this.userRepo.findOne({ where: { id } });
+      try{
+            const user = await this.userRepo.findOne({ where: { id } });
         if (!user) throw new BadRequestException('User not found');
         if (!user.isActive) throw new BadRequestException('User is already inactive');
         user.isActive = false;
         const savedUser = await this.userRepo.save(user);
         savedUser.password = '';
         return savedUser;
+      }catch (error) {
+        Logger.log('<-- Error deleting user',error)
+        throw error
+      }
     }
 
     async updateUserName(user: UserDto): Promise<User> {
-        if (!user.id) throw new BadRequestException('User ID is required');
+       try{
+           if (!user.id) throw new BadRequestException('User ID is required');
         const currentUser = await this.userRepo.findOne({ where: { id: user.id } });
         if (!currentUser) throw new BadRequestException('User not found');
         const isMatch = await bcrypt.compare(user.password, currentUser.password);
@@ -86,9 +129,14 @@ export class UserService {
         const savedUser = await this.userRepo.save(currentUser);
         savedUser.password = '';
         return savedUser;
+       }catch (error) {
+        Logger.log('<-- Error updating user name',error)
+        throw error
+       }
     }
 
     async updateUserEmail(user: UserDto): Promise<User> {
+      try{
         if (!user.id) throw new BadRequestException('User ID is required');
         const currentUser = await this.userRepo.findOne({ where: { id: user.id } });
         if (!currentUser) throw new BadRequestException('User not found');
@@ -98,10 +146,15 @@ export class UserService {
         const savedUser = await this.userRepo.save(currentUser);
         savedUser.password = '';
         return savedUser;
+      }catch (error) {
+        Logger.log('<-- Error updating user email',error)
+        throw error
+      }
     }
 
     async updateUserPassword(user: UserDto): Promise<User> {
-        if (!user.id) throw new BadRequestException('User ID is required');
+       try{
+         if (!user.id) throw new BadRequestException('User ID is required');
         const currentUser = await this.userRepo.findOne({ where: { id: user.id } });
         if (!currentUser) throw new BadRequestException('User not found');
         const isMatch = await bcrypt.compare(user.password, currentUser.password);
@@ -110,9 +163,14 @@ export class UserService {
         const savedUser = await this.userRepo.save(currentUser);
         savedUser.password = '';
         return savedUser;
+       }catch (error) {
+        Logger.log('<-- Error updating user password',error)
+        throw error
+       }
     }
 
     async updateUserRole(user: UserDto): Promise<User> {
+      try{
         if (!user.id) throw new BadRequestException('User ID is required');
         const currentUser = await this.userRepo.findOne({ where: { id: user.id } });
         if (!currentUser) throw new BadRequestException('User not found');
@@ -122,6 +180,10 @@ export class UserService {
         const savedUser = await this.userRepo.save(currentUser);
         savedUser.password = '';
         return savedUser;
+      }catch (error) {
+        Logger.log('<-- Error updating user role',error)
+        throw error
+      }
     }
 
     async  searchByUserName(name: string): Promise<User[]> {
@@ -136,6 +198,7 @@ export class UserService {
     }
     async  searchByUserEmail(email: string): Promise<User[]> {
         try {
+            
             if (!email) throw new BadRequestException('Email is required');
             const users = await this.userRepo.find({ where: { email: Like(`%${email}%`) } });
             if (users.length === 0) throw new BadRequestException('No users found');    
