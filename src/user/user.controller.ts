@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
 import { User } from './entity/user.entity';
@@ -12,7 +12,7 @@ export class UserController {
       return await this.userService.saveUser(user);
     }
 
-    @Get('logIn')
+    @Post('logIn')
     async authUser(@Body() req:{email:string,password:string}):Promise<any>{
        return this.userService.authenticateUser(req.email,req.password);
     }
@@ -33,12 +33,29 @@ export class UserController {
     async getUserById(@Param('id') req:{id:string}):Promise<User>{
         return await this.userService.getUserById(+req.id);  
     }
-    @Post('updateUser')
+    @Put('updateUser')
     async updateUser(@Body() user:UserDto):Promise<any>{
         return await this.userService.updateUser(user);  
     }
     @Post('deleteUser/:id')
     async deleteUser(@Param('id') id:string):Promise<any>{
         return await this.userService.deleteUser(+id);  
+    }
+
+    @Put('updateUserName')
+    async updateUserName(@Body() user:UserDto):Promise<any>{
+        return await this.userService.updateUserName(user);  
+    }
+    @Put('updateUserEmail')
+    async updateUserEmail(@Body() user:UserDto):Promise<any>{
+        return await this.userService.updateUserEmail(user);  
+    }
+    @Put('updateUserPassword')
+    async updateUserPassword(@Body() user:UserDto):Promise<any>{
+        return await this.userService.updateUserPassword(user);  
+    }
+    @Put('updateUserRole')
+    async updateUserRole(@Body() user:UserDto):Promise<any>{
+        return await this.userService.updateUserRole(user);  
     }
 }
