@@ -46,4 +46,94 @@ export class OffersController {
         };
     }
 
+    @Get('get/:id')
+    @HttpCode(200)
+    async getOfferById(@Param('id') id: number): Promise<any> {
+        const offer = await this.offerService.getOfferById(id);
+        return {
+            message: 'Offer retrieved successfully',
+            offer: offer,
+        };
+    }
+
+    @Get('getByProduct/:id')
+    @HttpCode(200)
+    async getOffersByProduct(@Param('id') id: number): Promise<any> {
+        const offers = await this.offerService.getOffersByProductId(id);
+        return {
+            message: 'Offers retrieved successfully',
+            offers: offers,
+        };
+    }
+
+    @Get('getBySeller/:id')
+    @HttpCode(200)
+    async getOffersBySeller(@Param('id') id: number): Promise<any> {
+        const offers = await this.offerService.getOffersBySellerId(id);
+        return {
+            message: 'Offers retrieved successfully',
+            offers: offers,
+        };
+    }
+
+    @Get('getByTitle/:title')
+    @HttpCode(200)
+    async getOffersByTitle(@Param('title') title: string): Promise<any> {
+        const offers = await this.offerService.getOffersByTitle(title);
+        return {
+            message: 'Offers retrieved successfully',
+            offers: offers,
+        };
+    }
+
+    @Get('getByStartDate/:date')
+    @HttpCode(200)
+    async getOffersByStartDate(@Param('date') date: Date): Promise<any> {
+        const offers = await this.offerService.getOffersByStartDate(date);
+        return {
+            message: 'Offers retrieved successfully',
+            offers: offers,
+        };
+    }
+
+    @Get('getByEndDate/:date')
+    @HttpCode(200)
+    async getOffersByEndDate(@Param('date') date: Date): Promise<any> {
+        const offers = await this.offerService.getOffersByEndDate(date);
+        return {
+            message: 'Offers retrieved successfully',
+            offers: offers,
+        };
+    }
+
+    @Get('getByStartAndEndDate/:startDate/:endDate')
+    @HttpCode(200)
+    async getOffersByStartAndEndDate(@Param('startDate') startDate: Date, @Param('endDate') endDate: Date): Promise<any> {
+        const offers = await this.offerService.getOffersByStartAndEndDate(startDate, endDate);
+        return {
+            message: 'Offers retrieved successfully',
+            offers: offers,
+        };
+    }
+
+    @Get('getByDiscount/:discount')
+    @HttpCode(200)
+    async getOffersByDiscount(@Param('discount') discount: number): Promise<any> {
+        const offers = await this.offerService.getOffersByDiscount(discount);
+        return {
+            message: 'Offers retrieved successfully',
+            offers: offers,
+        };
+    }
+
+    @Get('getByDiscountBetween/:min/:max')
+    @HttpCode(200)
+    async getOffersByDiscountBetween(@Param('min') min: number, @Param('max') max: number): Promise<any> {
+        const offers = await this.offerService.getOffersByDiscountBetween(min, max);
+        return {
+            message: 'Offers retrieved successfully',
+            offers: offers,
+        };
+    }
+
 }
