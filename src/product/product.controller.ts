@@ -18,7 +18,7 @@ export class ProductController {
         return {message:"Products Fetched",products};
     }
 
-    @Get(':id')
+    @Get('getBy/:id')
     async getProductById(@Param('id') id:number):Promise<any>{
         const product=await this.productService.getProductById(id);
         return {message:"Product Fetched",product};
@@ -37,6 +37,12 @@ export class ProductController {
     @Get('search/:name')
     async searchByName(@Param('name') name:string):Promise<any>{
         const products=await this.productService.searchByName(name);
+        return {message:"Products Fetched",products};
+    }
+
+    @Get('trending')
+    async getTrendingProducts():Promise<any>{
+        const products=await this.productService.getTrendingProducts();
         return {message:"Products Fetched",products};
     }
     
