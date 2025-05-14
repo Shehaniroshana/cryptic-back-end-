@@ -1,61 +1,81 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post, Put, Patch, Delete } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
-import { User } from './entity/user.entity';
 
 @Controller('user')
 export class UserController {
-    constructor(private userService:UserService){}
+    constructor(private readonly userService: UserService) {}
 
     @Post()
-    async saveUser(@Body() user:UserDto ):Promise<any>{
-      return await this.userService.saveUser(user);
+    @HttpCode(201)
+    async createUser(@Body() userDto: UserDto) {
+        const user = await this.userService.saveUser(userDto);
+        return { message: 'User created successfully', data: user };
     }
 
-    @Post('logIn')
-    async authUser(@Body() req:{email:string,password:string}):Promise<any>{
-       return this.userService.authenticateUser(req.email,req.password);
+    @Post('login')
+    async login(@Body() credentials: { email: string; password: string }) {
+        const user = await this.userService.authenticateUser(credentials.email, credentials.password);
+        return user;
     }
 
     @Get()
-    async getAllUsers():Promise<User[]>{
-        return await this.userService.getAllUsers();
-    }
-    @Get('activeUsers')
-    async getAllActiveUsers():Promise<User[]>{
-        return await this.userService.getAllActiveUsers();
-    }
-    @Get('inactiveUsers')
-    async getAllInactiveUsers():Promise<User[]>{
-        return await this.userService.getAllInactiveUsers();
-    }
-    @Get('user/:id')
-    async getUserById(@Param('id') req:{id:string}):Promise<User>{
-        return await this.userService.getUserById(+req.id);  
-    }
-    @Put('updateUser')
-    async updateUser(@Body() user:UserDto):Promise<any>{
-        return await this.userService.updateUser(user);  
-    }
-    @Post('deleteUser/:id')
-    async deleteUser(@Param('id') id:string):Promise<any>{
-        return await this.userService.deleteUser(+id);  
+    async findAll() {
+        const users = await this.userService.getAllUsers();
+        return { message: 'All users fetched successfully', data: users };
     }
 
-    @Put('updateUserName')
-    async updateUserName(@Body() user:UserDto):Promise<any>{
-        return await this.userService.updateUserName(user);  
+    @Get('active')
+    async findActive() {
+        const users = await this.userService.getAllActiveUsers();
+        return { message: 'Active users fetched successfully', data: users };
     }
-    @Put('updateUserEmail')
-    async updateUserEmail(@Body() user:UserDto):Promise<any>{
-        return await this.userService.updateUserEmail(user);  
+
+    @Get('inactive')
+    async findInactive() {
+        const users = await this.userService.getAllInactiveUsers();
+        return { message: 'Inactive users fetched successfully', data: users };
     }
-    @Put('updateUserPassword')
-    async updateUserPassword(@Body() user:UserDto):Promise<any>{
-        return await this.userService.updateUserPassword(user);  
+
+    @Get(':id')
+    async findOne(@Param('id') id: string) {
+        const user = await this.userService.getUserById(+id);
+        return { message: 'User fetched successfully', data: user };
     }
-    @Put('updateUserRole')
-    async updateUserRole(@Body() user:UserDto):Promise<any>{
-        return await this.userService.updateUserRole(user);  
+
+    @Put(':id')
+    async update(@Param('id') id: string, @Body() userDto: UserDto) {
+        const user = await this.userService.updateUser({ ...userDto, id: +id });
+        return { message: 'User updated successfully', data: user };
+    }
+
+    @Delete(':id')
+    async remove(@Param('id') id: string) {
+        const result = await this.userService.deleteUser(+id);
+        return { message: 'User deleted successfully', data: result };
+    }
+
+    @Patch(':id/name')
+    async updateName(@Param('id') id: string, @Body() userDto: UserDto) {
+        const user = await this.userService.updateUserName({ ...userDto, id: +id });
+        return { message: 'User name updated successfully', data: user };
+    }
+
+    @Patch(':id/email')
+    async updateEmail(@Param('id') id: string, @Body() userDto: UserDto) {
+        const user = await this.userService.updateUserEmail({ ...userDto, id: +id });
+        return { message: 'User email updated successfully', data: user };
+    }
+
+    @Patch(':id/password')
+    async updatePassword(@Param('id') id: string, @Body() userDto: UserDto) {
+        const user = await this.userService.updateUserPassword({ ...userDto, id: +id });
+        return { message: 'User password updated successfully', data: user };
+    }
+
+    @Patch(':id/role')
+    async updateRole(@Param('id') id: string, @Body() userDto: UserDto) {
+        const user = await this.userService.updateUserRole({ ...userDto, id: +id });
+        return { message: 'User role updated successfully', data: user };
     }
 }
