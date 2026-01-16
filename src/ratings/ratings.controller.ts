@@ -1,11 +1,11 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards, ParseUUIDPipe } from '@nestjs/common';
 import { RatingsService } from './ratings.service';
 import { RatingDto } from './dto/rating.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('rating')
 export class RatingsController {
-  constructor(private ratingService: RatingsService) {}
+  constructor(private ratingService: RatingsService) { }
 
   @Post()
   @UseGuards(JwtAuthGuard)
@@ -21,7 +21,7 @@ export class RatingsController {
   }
 
   @Post('get/:id')
-  async getRatingById(@Param('id') id: number): Promise<any> {
+  async getRatingById(@Param('id', new ParseUUIDPipe()) id: string): Promise<any> {
     const rate = await this.ratingService.getRatingById(id);
     return { message: 'Rating fetched successfully', rate };
   }
@@ -35,27 +35,27 @@ export class RatingsController {
 
   @Post('delete/:id')
   @UseGuards(JwtAuthGuard)
-  async deleteRating(@Param('id') id: number): Promise<any> {
+  async deleteRating(@Param('id', new ParseUUIDPipe()) id: string): Promise<any> {
     const rate = await this.ratingService.deleteRating(id);
     return { message: 'Rating deleted successfully', rate };
   }
 
   @Post('product/:id')
-  async getRatingsByProductId(@Param('id') id: number): Promise<any> {
+  async getRatingsByProductId(@Param('id', new ParseUUIDPipe()) id: string): Promise<any> {
     const rates = await this.ratingService.getRatingsByProductId(id);
     return { message: 'Ratings fetched successfully', rates };
   }
 
   @Post('user/:id')
-  async getRatingsByUserId(@Param('id') id: number): Promise<any> {
+  async getRatingsByUserId(@Param('id', new ParseUUIDPipe()) id: string): Promise<any> {
     const rates = await this.ratingService.getRatingsByUserId(id);
     return { message: 'Ratings fetched successfully', rates };
   }
 
   @Post('user/:userId/product/:productId')
   async getRatingsByUserIdAndProductId(
-    @Param('userId') userId: number,
-    @Param('productId') productId: number,
+    @Param('userId', new ParseUUIDPipe()) userId: string,
+    @Param('productId', new ParseUUIDPipe()) productId: string,
   ): Promise<any> {
     const rates = await this.ratingService.getRatingsByUserIdAndProductId(
       userId,
@@ -65,7 +65,7 @@ export class RatingsController {
   }
 
   @Post('product/:id/average')
-  async getAverageRatingByProductId(@Param('id') id: number): Promise<any> {
+  async getAverageRatingByProductId(@Param('id', new ParseUUIDPipe()) id: string): Promise<any> {
     const rate = await this.ratingService.getAverageRatingByProductId(id);
     return { message: 'Average rating fetched successfully', rate };
   }

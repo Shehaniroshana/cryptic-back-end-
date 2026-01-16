@@ -7,7 +7,7 @@ enum Role {
 }
 export class UserDto {
   @IsOptional()
-  id?: number;
+  id?: string;
 
   @IsNotEmpty({ message: 'name is required' })
   @MinLength(3, { message: 'name must be at least 3 characters' })

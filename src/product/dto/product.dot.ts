@@ -17,7 +17,7 @@ enum RiskLevel {
 
 export class ProductDTO {
   @IsOptional()
-  id?: number;
+  id?: string;
 
   @IsNotEmpty({ message: 'Name is required' })
   @IsString()
@@ -40,8 +40,8 @@ export class ProductDTO {
   stock: number;
 
   @IsNotEmpty({ message: 'Seller ID is required' })
-  @IsInt({ message: 'Seller ID must be an integer' })
-  seller: number;
+  @IsString({ message: 'Seller ID must be a string (UUID)' })
+  seller: string;
 
   @IsNotEmpty({ message: 'Country of origin is required' })
   @IsString()

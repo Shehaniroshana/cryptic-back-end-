@@ -13,7 +13,7 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepo: Repository<User>,
-  ) {}
+  ) { }
 
   async saveUser(user: UserDto): Promise<User> {
     try {
@@ -81,7 +81,7 @@ export class UserService {
     }
   }
 
-  async getUserById(id: number): Promise<User> {
+  async getUserById(id: string): Promise<User> {
     try {
       if (!id) throw new BadRequestException('User ID is required');
       const user = await this.userRepo.findOne({ where: { id } });
@@ -112,7 +112,7 @@ export class UserService {
     }
   }
 
-  async deleteUser(id: number): Promise<User> {
+  async deleteUser(id: string): Promise<User> {
     try {
       const user = await this.userRepo.findOne({ where: { id } });
       if (!user) throw new BadRequestException('User not found');

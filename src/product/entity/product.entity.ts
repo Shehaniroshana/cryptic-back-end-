@@ -19,8 +19,8 @@ enum RiskLevel {
 
 @Entity()
 export class Product {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
   @Column()
   name: string;
   @Column()

@@ -1,26 +1,33 @@
 import { Module, forwardRef } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { UserModule } from '../user/user.module';
 import { User } from '../user/entity/user.entity';
 
 @Module({
-  imports: [
-    forwardRef(() => UserModule),
-    PassportModule,
-    TypeOrmModule.forFeature([User]),
-    JwtModule.register({
-      secret:
-        process.env.JWT_SECRET || 'your-secret-key-change-this-in-production',
-      signOptions: {
-        expiresIn: '24h', // Token expires in 24 hours
-      },
-    }),
-  ],
-  providers: [AuthService, JwtStrategy],
-  exports: [AuthService, JwtModule],
+    imports: [
+        forwardRef(() => UserModule),
+        PassportModule,
+        TypeOrmModule.forFeature([User]),
+        JwtModule.registerAsync({
+            imports: [ConfigModule],
+            useFactory: (configService: ConfigService): JwtModuleOptions => {
+                const secret = configService.get<string>('jwt.secret') || 'fallback-secret-change-this';
+                const expiresIn = configService.get<string>('jwt.expiresIn') || '24h';
+
+                return {
+                    secret,
+                    signOptions: { expiresIn } as any,
+                };
+            },
+            inject: [ConfigService],
+        }),
+    ],
+    providers: [AuthService, JwtStrategy],
+    exports: [AuthService, JwtModule],
 })
-export class AuthModule {}
+export class AuthModule { }

@@ -18,7 +18,7 @@ export class OrderService {
     private userRepo: Repository<User>,
     @InjectRepository(Product)
     private productRepo: Repository<Product>,
-  ) {}
+  ) { }
 
   async createOrder(order: OrderDto): Promise<Order> {
     if (!(await this.userRepo.findOne({ where: { id: order.user } })))
@@ -42,7 +42,7 @@ export class OrderService {
     return orders;
   }
 
-  async getOrderById(id: number): Promise<Order> {
+  async getOrderById(id: string): Promise<Order> {
     try {
       if (!id) throw new BadRequestException('Order id is required');
       const order = await this.orderRepo.findOne({
@@ -57,7 +57,7 @@ export class OrderService {
     }
   }
 
-  async deleteOrder(id: number): Promise<Order> {
+  async deleteOrder(id: string): Promise<Order> {
     try {
       if (!id) throw new BadRequestException('Order id is required');
       const orderToDelete = await this.orderRepo.findOne({ where: { id } });

@@ -15,7 +15,7 @@ export class OffersService {
     private offerRepo: Repository<Offers>,
     @InjectRepository(Product)
     private productRepo: Repository<Product>,
-  ) {}
+  ) { }
 
   async createOffer(offers: offerDto): Promise<Offers> {
     try {
@@ -59,7 +59,7 @@ export class OffersService {
     }
   }
 
-  async deleteOffer(id: number): Promise<Offers> {
+  async deleteOffer(id: string): Promise<Offers> {
     try {
       if (!id) throw new BadRequestException('Offer id is required');
       const offer = await this.offerRepo.findOneBy({ id });
@@ -91,7 +91,7 @@ export class OffersService {
     }
   }
 
-  async getOfferById(id: number): Promise<offerDto> {
+  async getOfferById(id: string): Promise<offerDto> {
     try {
       if (!id) throw new BadRequestException('Offer id is required');
       const offer = await this.offerRepo.findOneBy({ id });
@@ -104,8 +104,8 @@ export class OffersService {
   }
 
   async getOffersByUserIdAndProductId(
-    userId: number,
-    productId: number,
+    userId: string,
+    productId: string,
   ): Promise<offerDto[]> {
     try {
       if (!userId) throw new BadRequestException('User id is required');
@@ -128,7 +128,7 @@ export class OffersService {
     }
   }
 
-  async getOffersByProductId(productId: number): Promise<offerDto[]> {
+  async getOffersByProductId(productId: string): Promise<offerDto[]> {
     try {
       if (!productId) throw new BadRequestException('Product id is required');
       const offers = await this.offerRepo.find({
@@ -222,7 +222,7 @@ export class OffersService {
     }
   }
 
-  async getOffersBySellerId(sellerId: number) {
+  async getOffersBySellerId(sellerId: string) {
     try {
       if (!sellerId) throw new BadRequestException('Seller id is required');
       const offers = await this.offerRepo.find({

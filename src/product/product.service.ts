@@ -15,7 +15,7 @@ export class ProductService {
     @InjectRepository(Product) private productRepo: Repository<Product>,
     @InjectRepository(User) private userRepo: Repository<User>,
     @InjectRepository(Order) private orderRepo: Repository<Order>,
-  ) {}
+  ) { }
 
   async createProduct(product: ProductDTO): Promise<Product> {
     try {
@@ -55,7 +55,7 @@ export class ProductService {
     }
   }
 
-  async getProductById(id: number): Promise<ProductDTO> {
+  async getProductById(id: string): Promise<ProductDTO> {
     try {
       this.logger.log(`--> Getting product with id ${id}`);
       if (!id) throw new BadRequestException('Product id is required');
@@ -99,7 +99,7 @@ export class ProductService {
     }
   }
 
-  async deleteProduct(id: number): Promise<Product> {
+  async deleteProduct(id: string): Promise<Product> {
     try {
       this.logger.log(`--> Deleting product with id ${id}`);
       if (!id) throw new BadRequestException('Product id is required');
@@ -155,7 +155,7 @@ export class ProductService {
                 GROUP BY productId 
                 ORDER BY COUNT(*) DESC
                 LIMIT 10
-            `)) as { productId: number }[];
+            `)) as { productId: string }[];
 
       const productIds = trendingProductIds.map((item) => item.productId);
 

@@ -2,7 +2,7 @@ import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class offerDto {
   @IsOptional()
-  id?: number;
+  id?: string;
   @IsNotEmpty({ message: 'title is required' })
   title: string;
   @IsNotEmpty({ message: 'discount is required' })
@@ -12,7 +12,7 @@ export class offerDto {
   @IsNotEmpty({ message: 'end date is required' })
   endDate: Date;
   @IsNotEmpty({ message: 'product is required' })
-  product: number;
+  product: string;
   @IsOptional()
   isActive?: boolean;
 }

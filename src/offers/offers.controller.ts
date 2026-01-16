@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   UseGuards,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { OffersService } from './offers.service';
 import { offerDto } from './dto/offers.dto';
@@ -16,7 +17,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('offers')
 export class OffersController {
-  constructor(private offerService: OffersService) {}
+  constructor(private offerService: OffersService) { }
 
   @Post()
   @HttpCode(201)
@@ -44,7 +45,7 @@ export class OffersController {
   @HttpCode(200)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('SELLER', 'ADMIN')
-  async deleteOffer(@Param('id') id: number): Promise<any> {
+  async deleteOffer(@Param('id', new ParseUUIDPipe()) id: string): Promise<any> {
     const deletedOffer = await this.offerService.deleteOffer(id);
     return {
       message: 'Offer deleted successfully',
@@ -66,7 +67,7 @@ export class OffersController {
 
   @Get('get/:id')
   @HttpCode(200)
-  async getOfferById(@Param('id') id: number): Promise<any> {
+  async getOfferById(@Param('id', new ParseUUIDPipe()) id: string): Promise<any> {
     const offer = await this.offerService.getOfferById(id);
     return {
       message: 'Offer retrieved successfully',
@@ -76,7 +77,7 @@ export class OffersController {
 
   @Get('getByProduct/:id')
   @HttpCode(200)
-  async getOffersByProduct(@Param('id') id: number): Promise<any> {
+  async getOffersByProduct(@Param('id', new ParseUUIDPipe()) id: string): Promise<any> {
     const offers = await this.offerService.getOffersByProductId(id);
     return {
       message: 'Offers retrieved successfully',
@@ -86,7 +87,7 @@ export class OffersController {
 
   @Get('getBySeller/:id')
   @HttpCode(200)
-  async getOffersBySeller(@Param('id') id: number): Promise<any> {
+  async getOffersBySeller(@Param('id', new ParseUUIDPipe()) id: string): Promise<any> {
     const offers = await this.offerService.getOffersBySellerId(id);
     return {
       message: 'Offers retrieved successfully',

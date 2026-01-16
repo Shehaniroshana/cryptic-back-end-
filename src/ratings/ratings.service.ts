@@ -15,7 +15,7 @@ export class RatingsService {
     @InjectRepository(Rating) private ratingRepo: Repository<Rating>,
     @InjectRepository(User) private userRepo: Repository<User>,
     @InjectRepository(Product) private productRepo: Repository<Product>,
-  ) {}
+  ) { }
 
   async createRating(rating: RatingDto) {
     try {
@@ -51,7 +51,7 @@ export class RatingsService {
     }
   }
 
-  async getRatingById(id: number): Promise<Rating> {
+  async getRatingById(id: string): Promise<Rating> {
     try {
       if (!id) throw new BadRequestException('Rating id is required');
       const rating = await this.ratingRepo.findOne({
@@ -78,7 +78,7 @@ export class RatingsService {
     }
   }
 
-  async deleteRating(id: number): Promise<Rating> {
+  async deleteRating(id: string): Promise<Rating> {
     try {
       if (!id) throw new BadRequestException('Rating id is required');
       const ratingToDelete = await this.ratingRepo.findOne({ where: { id } });
@@ -91,7 +91,7 @@ export class RatingsService {
     }
   }
 
-  async getRatingsByProductId(id: number): Promise<Rating[]> {
+  async getRatingsByProductId(id: string): Promise<Rating[]> {
     try {
       if (!id) throw new BadRequestException('Product id is required');
       const ratings = await this.ratingRepo.find({
@@ -106,7 +106,7 @@ export class RatingsService {
     }
   }
 
-  async getRatingsByUserId(id: number): Promise<Rating[]> {
+  async getRatingsByUserId(id: string): Promise<Rating[]> {
     try {
       if (!id) throw new BadRequestException('User id is required');
       const ratings = await this.ratingRepo.find({
@@ -122,8 +122,8 @@ export class RatingsService {
   }
 
   async getRatingsByUserIdAndProductId(
-    userId: number,
-    productId: number,
+    userId: string,
+    productId: string,
   ): Promise<Rating[]> {
     try {
       if (!userId || !productId)
@@ -147,7 +147,7 @@ export class RatingsService {
     }
   }
 
-  async getAverageRatingByProductId(id: number): Promise<number> {
+  async getAverageRatingByProductId(id: string): Promise<number> {
     try {
       if (!id) throw new BadRequestException('Product id is required');
       const ratings = await this.ratingRepo.find({

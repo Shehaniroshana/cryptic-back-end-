@@ -5,7 +5,7 @@ import { UserService } from '../user/user.service';
 export interface LoginResponse {
   accessToken: string;
   user: {
-    id: number;
+    id: string;
     name: string;
     email: string;
     role: string;
@@ -17,7 +17,7 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async login(email: string, password: string): Promise<LoginResponse> {
     // Validate credentials

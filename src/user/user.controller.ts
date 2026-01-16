@@ -9,6 +9,7 @@ import {
   Patch,
   Delete,
   UseGuards,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
@@ -22,7 +23,7 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly authService: AuthService,
-  ) {}
+  ) { }
 
   @Post()
   @HttpCode(201)
@@ -66,8 +67,8 @@ export class UserController {
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
-  async findOne(@Param('id') id: string) {
-    const user = await this.userService.getUserById(+id);
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    const user = await this.userService.getUserById(id);
     return { message: 'User fetched successfully', data: user };
   }
 
@@ -81,8 +82,8 @@ export class UserController {
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
-  async remove(@Param('id') id: string) {
-    const result = await this.userService.deleteUser(+id);
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    const result = await this.userService.deleteUser(id);
     return { message: 'User deleted successfully', data: result };
   }
 

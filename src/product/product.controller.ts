@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards, ParseUUIDPipe } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { ProductDTO } from './dto/product.dot';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -7,7 +7,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('product')
 export class ProductController {
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService) { }
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -24,7 +24,7 @@ export class ProductController {
   }
 
   @Get('getBy/:id')
-  async getProductById(@Param('id') id: number): Promise<any> {
+  async getProductById(@Param('id', new ParseUUIDPipe()) id: string): Promise<any> {
     const product = await this.productService.getProductById(id);
     return { message: 'Product Fetched', product };
   }
@@ -40,7 +40,7 @@ export class ProductController {
   @Post('delete/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('SELLER', 'ADMIN')
-  async deleteProduct(@Param('id') id: number): Promise<any> {
+  async deleteProduct(@Param('id', new ParseUUIDPipe()) id: string): Promise<any> {
     const deletedProduct = await this.productService.deleteProduct(id);
     return { message: 'Product Deleted', product: deletedProduct };
   }

@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   UseGuards,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { OrderDto } from './dto/order.dto';
@@ -17,7 +18,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('order')
 export class OrderController {
-  constructor(private orderService: OrderService) {}
+  constructor(private orderService: OrderService) { }
 
   @Post()
   @HttpCode(201)
@@ -38,14 +39,14 @@ export class OrderController {
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
-  async deleteOrder(@Param('id') id: number): Promise<any> {
+  async deleteOrder(@Param('id', new ParseUUIDPipe()) id: string): Promise<any> {
     const orderDeleted = await this.orderService.deleteOrder(id);
     return { message: 'Order deleted successfully', orderDeleted };
   }
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
-  async getOrderById(@Param('id') id: number): Promise<any> {
+  async getOrderById(@Param('id', new ParseUUIDPipe()) id: string): Promise<any> {
     const order = await this.orderService.getOrderById(id);
     return { message: 'Order fetched successfully', order };
   }
