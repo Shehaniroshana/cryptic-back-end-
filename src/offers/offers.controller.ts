@@ -6,9 +6,13 @@ import {
   HttpCode,
   Param,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { OffersService } from './offers.service';
 import { offerDto } from './dto/offers.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('offers')
 export class OffersController {
@@ -16,6 +20,8 @@ export class OffersController {
 
   @Post()
   @HttpCode(201)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('SELLER', 'ADMIN')
   async createOffer(@Body() offer: offerDto): Promise<any> {
     const newOffer = await this.offerService.createOffer(offer);
     return {
@@ -36,6 +42,8 @@ export class OffersController {
 
   @Delete('delete/:id')
   @HttpCode(200)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('SELLER', 'ADMIN')
   async deleteOffer(@Param('id') id: number): Promise<any> {
     const deletedOffer = await this.offerService.deleteOffer(id);
     return {
@@ -46,6 +54,8 @@ export class OffersController {
 
   @Post('update')
   @HttpCode(200)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('SELLER', 'ADMIN')
   async updateOffer(@Body() offer: offerDto): Promise<any> {
     const updatedOffer = await this.offerService.updateOffer(offer);
     return {
