@@ -9,6 +9,6 @@ import { ProductModule } from 'src/product/product.module';
 @Module({
   providers: [RatingsService],
   controllers: [RatingsController],
-  imports:[TypeOrmModule.forFeature([Rating]),UserModule,ProductModule]
+  imports: [TypeOrmModule.forFeature([Rating]), UserModule, ProductModule],
 })
 export class RatingsModule {}

@@ -10,9 +10,11 @@ import { UserModule } from 'src/user/user.module';
 @Module({
   providers: [OrderService],
   controllers: [OrderController],
-  imports:[TypeOrmModule.forFeature([Order,orderItems]), 
-     forwardRef(() => ProductModule),
-     UserModule],
-  exports:[TypeOrmModule]  
+  imports: [
+    TypeOrmModule.forFeature([Order, orderItems]),
+    forwardRef(() => ProductModule),
+    UserModule,
+  ],
+  exports: [TypeOrmModule],
 })
 export class OrderModule {}

@@ -9,21 +9,22 @@ import { OffersModule } from './offers/offers.module';
 import { OrderModule } from './order/order.module';
 
 @Module({
-  imports: [UserModule,
+  imports: [
+    UserModule,
     TypeOrmModule.forRoot({
-      type:'mysql',
-      host:'localhost',
-      port:3306,
-      username:'root',
-      password:'1234',
-      database:'cryptic_emporium',
-      entities:[__dirname+'/**/*.entity{.ts,.js}'],
-      synchronize:true,
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: '1234',
+      database: 'cryptic_emporium',
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      synchronize: true,
     }),
     ProductModule,
     RatingsModule,
     OffersModule,
-    OrderModule
+    OrderModule,
   ],
   controllers: [AppController],
   providers: [AppService],
